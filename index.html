@@ -109,18 +109,17 @@
     </div>
 
     <div class="question">
-      <h2>2. What is the name of the project that offers a transformation based on ATT&CK?</h2>
+      <h2>2. What is the name of the project that offers a transformation based on ATT&amp;CK?</h2>
       <input type="text" id="q2" placeholder="**** *******">
       <button onclick="checkAnswer('q2','MISP Project')">Check</button>
       <p class="feedback" id="feedback-q2"></p>
     </div>
-  </div>
 
-   <div class="question">
+    <div class="question">
       <h2>3. From the domain microsoft.com, extract the MX records (mail server). What email is one of them other than global?</h2>
-      <input type="text" id="q3" placeholder="************.****.**********..*******.***">
-      <button onclick="checkAnswer('q2','microsoft-com.mail.protection.outlook.com')">Check</button>
-      <p class="feedback" id="feedback-q2"></p>
+      <input type="text" id="q3" placeholder="************-***.****.**********.*******.***">
+      <button onclick="checkAnswer('q3','microsoft-com.mail.protection.outlook.com')">Check</button>
+      <p class="feedback" id="feedback-q3"></p>
     </div>
   </div>
 
@@ -132,7 +131,7 @@
         feedback.textContent = "✅ Correct!";
         feedback.className = "feedback correct";
       } else {
-        feedback.textContent = "❌ Wrong, try again.";
+        feedback.textContent = "❌ Wrong, try again. (Hint: " + correctAnswer.replace(/[a-zA-Z0-9]/g, "*") + ")";
         feedback.className = "feedback wrong";
       }
     }
