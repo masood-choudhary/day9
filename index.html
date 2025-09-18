@@ -116,6 +116,14 @@
     </div>
   </div>
 
+   <div class="question">
+      <h2>3. From the domain microsoft.com, extract the MX records (mail server). What email is one of them other than global?</h2>
+      <input type="text" id="q3" placeholder="************.****.**********..*******.***">
+      <button onclick="checkAnswer('q2','microsoft-com.mail.protection.outlook.com')">Check</button>
+      <p class="feedback" id="feedback-q2"></p>
+    </div>
+  </div>
+
   <script>
     function checkAnswer(inputId, correctAnswer) {
       const userInput = document.getElementById(inputId).value.trim().toLowerCase();
