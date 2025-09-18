@@ -2,143 +2,107 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NAVTTC Day 9 Exercise - OSINT</title>
+  <title>NAV</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
       margin: 0;
       padding: 0;
-      line-height: 1.6;
-      color: #e0e0e0;
-      background: url("image.jpeg") no-repeat center center fixed;
-      background-size: cover; /* ✅ Fill the screen */
-      position: relative;
-    }
-
-    /* Dark translucent overlay */
-    body::before {
-      content: "";
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: rgba(0, 0, 0, 0.7);
-      z-index: 0;
-    }
-
-    .container {
-      position: relative;
-      z-index: 1; /* Keeps content above overlay */
-      max-width: 800px;
-      margin: auto;
-      padding: 40px 20px;
-    }
-
-    h1 {
+      background: url('image.jpeg') no-repeat center center fixed;
+      background-size: cover;
+      color: white;
+      font-family: Arial, sans-serif;
       text-align: center;
+    }
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      z-index: -1;
+    }
+    h1 {
       font-size: 60px;
       color: #00ff00;
-      text-shadow: 0 0 6px #00ff00, 
-                   0 0 12px #00ff00, 
-                   0 0 20px #00ff00;
-      margin-bottom: 40px;
+      text-shadow: 0 0 20px #00ff00, 0 0 40px #00ff00;
+      margin-top: 20px;
     }
-
-    .question {
-      background: rgba(20, 20, 20, 0.85);
-      padding: 20px;
-      margin: 20px 0;
-      border: 1px solid #333;
-      border-radius: 6px;
+    .container {
+      margin-top: 50px;
     }
-
-    .question h2 {
-      margin-top: 0;
+    input, button {
+      padding: 10px;
       font-size: 18px;
-      font-weight: bold;
-      color: #e0e0e0;
-    }
-
-    input[type=text] {
-      width: 60%;
-      padding: 8px;
-      border-radius: 4px;
-      border: 1px solid #555;
-      margin-right: 10px;
-      background: #0d0d0d;
-      color: #fff;
-    }
-
-    button {
-      padding: 8px 15px;
+      margin: 5px;
+      border-radius: 8px;
       border: none;
-      border-radius: 4px;
-      background-color: #00cc66;
-      color: white;
+    }
+    input {
+      width: 350px;
+    }
+    button {
       cursor: pointer;
-      transition: 0.3s;
-    }
-
-    button:hover {
-      background-color: #00994d;
-    }
-
-    .feedback {
-      margin-top: 10px;
+      background-color: #00ff00;
+      color: black;
       font-weight: bold;
     }
-
-    .correct {
-      color: #00ff00;
-    }
-
-    .wrong {
-      color: #ff3333;
+    #result {
+      margin-top: 20px;
+      font-size: 22px;
     }
   </style>
 </head>
 <body>
+  <div class="overlay"></div>
+  <h1>NAV</h1>
   <div class="container">
-    <h1>NAVTTC Day 9 Exercise - OSINT</h1>
-
-    <div class="question">
-      <h2>1. What is the name of the transform that queries NIST’s National Vulnerability Database?</h2>
-      <input type="text" id="q1" placeholder="**** ***">
-      <button onclick="checkAnswer('q1','NIST NVD')">Check</button>
-      <p class="feedback" id="feedback-q1"></p>
-    </div>
-
-    <div class="question">
-      <h2>2. What is the name of the project that offers a transformation based on ATT&CK?</h2>
-      <input type="text" id="q2" placeholder="**** *******">
-      <button onclick="checkAnswer('q2','MISP Project')">Check</button>
-      <p class="feedback" id="feedback-q2"></p>
-    </div>
+    <p id="question"></p>
+    <input type="text" id="answer" placeholder="Type your answer here">
+    <br>
+    <button onclick="checkAnswer()">Check</button>
+    <p id="result"></p>
   </div>
 
   <script>
-    function checkAnswer(inputId, correctAnswer) {
-      const userInput = document.getElementById(inputId).value.trim().toLowerCase();
-      const feedback = document.getElementById('feedback-' + inputId);
-      if (userInput === correctAnswer.toLowerCase()) {
-        feedback.textContent = "✅ Correct!";
-        feedback.className = "feedback correct";
-      } else {
-        feedback.textContent = "❌ Wrong, try again.";
-        feedback.className = "feedback wrong";
+    const quiz = [
+      { 
+        q: "What is the vulnerability database managed by NIST called?", 
+        a: "NVD",
+        hint: "**** ***"
+      },
+      { 
+        q: "From the domain microsoft.com, extract the MX records (mail server). What email is one of them other than global?", 
+        a: "microsoft-com.mail.protection.outlook.com",
+        hint: "***********-***.****.*********.*******.***"
       }
+    ];
+
+    let currentQuestion = 0;
+
+    function loadQuestion() {
+      document.getElementById("question").innerText = quiz[currentQuestion].q;
+      document.getElementById("answer").value = "";
+      document.getElementById("answer").placeholder = quiz[currentQuestion].hint;
+      document.getElementById("result").innerText = "";
     }
 
-    // Enter key detection
-    document.querySelectorAll("input[type=text]").forEach(input => {
-      input.addEventListener("keypress", function(event) {
-        if (event.key === "Enter") {
-          event.preventDefault();
-          const button = this.nextElementSibling;
-          if (button) button.click();
-        }
-      });
-    });
+    function checkAnswer() {
+      const userAnswer = document.getElementById("answer").value.trim().toLowerCase();
+      const correctAnswer = quiz[currentQuestion].a.toLowerCase();
+
+      if (userAnswer === correctAnswer) {
+        document.getElementById("result").innerText = "✅ Correct!";
+      } else {
+        document.getElementById("result").innerText = "❌ Wrong! Correct Answer: " + quiz[currentQuestion].a;
+      }
+
+      currentQuestion = (currentQuestion + 1) % quiz.length;
+      setTimeout(loadQuestion, 2500);
+    }
+
+    // Load the first question
+    loadQuestion();
   </script>
 </body>
 </html>
