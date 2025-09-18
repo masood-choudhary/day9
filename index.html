@@ -12,7 +12,7 @@
       line-height: 1.6;
       color: #e0e0e0;
       background: url("image.jpeg") no-repeat center center fixed;
-      background-size: cover;
+      background-size: cover; /* ✅ Fill the screen */
       position: relative;
     }
 
@@ -40,7 +40,7 @@
       color: #00ff00;
       text-shadow: 0 0 6px #00ff00, 
                    0 0 12px #00ff00, 
-                   0 0 20px #00ff00; /* ✅ Reduced bloom effect */
+                   0 0 20px #00ff00;
       margin-bottom: 40px;
     }
 
@@ -103,14 +103,14 @@
 
     <div class="question">
       <h2>1. What is the name of the transform that queries NIST’s National Vulnerability Database?</h2>
-      <input type="text" id="q1">
+      <input type="text" id="q1" placeholder="**** ***">
       <button onclick="checkAnswer('q1','NIST NVD')">Check</button>
       <p class="feedback" id="feedback-q1"></p>
     </div>
 
     <div class="question">
       <h2>2. What is the name of the project that offers a transformation based on ATT&CK?</h2>
-      <input type="text" id="q2">
+      <input type="text" id="q2" placeholder="**** *******">
       <button onclick="checkAnswer('q2','MISP Project')">Check</button>
       <p class="feedback" id="feedback-q2"></p>
     </div>
@@ -142,4 +142,3 @@
   </script>
 </body>
 </html>
-
