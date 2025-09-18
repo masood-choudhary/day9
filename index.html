@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>NAVTTC Day 9 Exercise - OSINT</title>
   <style>
     body {
@@ -95,13 +95,6 @@
     .wrong {
       color: #ff3333;
     }
-
-    .hint {
-      margin-top: 8px;
-      color: #bfbfbf;
-      font-size: 14px;
-      user-select: none;
-    }
   </style>
 </head>
 <body>
@@ -113,7 +106,6 @@
       <input type="text" id="q1" placeholder="**** ***">
       <button onclick="checkAnswer('q1','NIST NVD')">Check</button>
       <p class="feedback" id="feedback-q1"></p>
-      <p class="hint" id="hint-q1"></p>
     </div>
 
     <div class="question">
@@ -121,79 +113,37 @@
       <input type="text" id="q2" placeholder="**** *******">
       <button onclick="checkAnswer('q2','MISP Project')">Check</button>
       <p class="feedback" id="feedback-q2"></p>
-      <p class="hint" id="hint-q2"></p>
     </div>
 
-    <!-- 3rd question properly inside the container, with unique IDs -->
     <div class="question">
       <h2>3. From the domain microsoft.com, extract the MX records (mail server). What email is one of them other than global?</h2>
-      <input type="text" id="q3" placeholder="************.****.**********..*******.***">
+      <input type="text" id="q3" placeholder="************-***.****.**********.*******.***">
       <button onclick="checkAnswer('q3','microsoft-com.mail.protection.outlook.com')">Check</button>
       <p class="feedback" id="feedback-q3"></p>
-      <p class="hint" id="hint-q3"></p>
     </div>
   </div>
 
   <script>
-    // Normalizes input and answer by removing non-alphanumeric chars and lowercasing.
-    function normalizeForCompare(s) {
-      return (s || "").replace(/[^a-z0-9]/gi, "").toLowerCase();
-    }
-
-    // Show feedback and avoid exposing the full answer. Use normalized strict equality.
     function checkAnswer(inputId, correctAnswer) {
-      const inputEl = document.getElementById(inputId);
-      const feedbackEl = document.getElementById('feedback-' + inputId);
-      const userInput = (inputEl.value || "").trim();
-
-      if (!userInput) {
-        feedbackEl.textContent = "❌ Please enter an answer.";
-        feedbackEl.className = "feedback wrong";
-        return;
-      }
-
-      if (normalizeForCompare(userInput) === normalizeForCompare(correctAnswer)) {
-        feedbackEl.textContent = "✅ Correct!";
-        feedbackEl.className = "feedback correct";
+      const userInput = document.getElementById(inputId).value.trim().toLowerCase();
+      const feedback = document.getElementById('feedback-' + inputId);
+      if (userInput === correctAnswer.toLowerCase()) {
+        feedback.textContent = "✅ Correct!";
+        feedback.className = "feedback correct";
       } else {
-        feedbackEl.textContent = "❌ Wrong, try again. (See hint below)";
-        feedbackEl.className = "feedback wrong";
+        feedback.textContent = "❌ Wrong, try again. (Hint: " + correctAnswer.replace(/[a-zA-Z0-9]/g, "*") + ")";
+        feedback.className = "feedback wrong";
       }
     }
 
-    // Build and display masked hint for each question without revealing the real answer.
-    function buildMaskedHint(answer) {
-      // Replace every alnum char with '*' but preserve separators. Then turn dots into spaces
-      // so hint looks like "**** ***" style for multi-word answers.
-      return answer.replace(/[A-Za-z0-9]/g, "*").replace(/\./g, " ");
-    }
-
-    // Populate hints on DOM ready
-    document.addEventListener('DOMContentLoaded', function() {
-      const answers = {
-        q1: "NIST NVD",
-        q2: "MISP Project",
-        q3: "microsoft-com.mail.protection.outlook.com"
-      };
-
-      Object.keys(answers).forEach(function(qid) {
-        const hintEl = document.getElementById('hint-' + qid);
-        if (hintEl) {
-          hintEl.textContent = "Hint: " + buildMaskedHint(answers[qid]);
+    // Enter key detection
+    document.querySelectorAll("input[type=text]").forEach(input => {
+      input.addEventListener("keypress", function(event) {
+        if (event.key === "Enter") {
+          event.preventDefault();
+          const button = this.nextElementSibling;
+          if (button) button.click();
         }
-      });
-
-      // Enter key detection: find the button in the same .question container and click it.
-      document.querySelectorAll("input[type=text]").forEach(function(input) {
-        input.addEventListener("keydown", function(event) {
-          if (event.key === "Enter") {
-            event.preventDefault();
-            const parent = this.closest(".question");
-            if (!parent) return;
-            const btn = parent.querySelector("button");
-            if (btn) btn.click();
-          }
-        });
       });
     });
   </script>
